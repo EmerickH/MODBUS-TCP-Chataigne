@@ -1,0 +1,130 @@
+{
+	"name":"Modbus TCP",
+	"type":"TCP Client",
+	"path":"Protocol",
+	
+	"version":"1.0.0",
+	"description":"Send commands to TCP Modbus devices",
+	"url": "https://github.com/EmerickH/MODBUS-TCP-Chataigne",
+	"downloadURL": "https://github.com/EmerickH/MODBUS-TCP-Chataigne/archive/refs/heads/main.zip",
+	
+	"hasInput":true,
+	"hasOutput":true,
+	"hideDefaultCommands":false,
+	"hideDefaultParameters": ["messageStructure","protocol","firstValueIsTheName","autoAdd"],
+
+	"defaults":
+	{		
+		"protocol": "Raw",
+		"autoAdd": false,
+		"output":
+		{
+			"local": false,
+			"remotePort": 502
+		}
+	},
+
+	"parameters":
+	{
+		"Clear values":{
+			"type": "Trigger",
+			"description": "Clear all data from values"
+		}
+	},
+	"values":
+	{
+	},
+	"commands": {
+		"Read data": {
+			"menu":"",
+			"callback":"readData",
+			"parameters": {
+				"Type": {
+					"type":"Enum",
+					"options":{
+						"Coils": 1,
+						"Discrete inputs": 2,
+						"Holding registers": 3,
+						"Input registers": 4
+					}
+				},
+				"Unit ID": {
+					"type":"Integer",
+					"min":0,
+					"max":255,
+					"default":0,
+					"description": "Address of the device"
+				},
+				"Start address": {
+					"type":"Integer",
+					"min":0,
+					"max":65535,
+					"default":0,
+					"description": "Address of the first register/coil to read (0 based)"
+				},
+				"Count": {
+					"type":"Integer",
+					"min":0,
+					"max":2000,
+					"description": "Number of registers/coils to read"
+				}
+			}
+		},
+		"Write coil": {
+			"menu":"",
+			"callback":"writeCoil",
+			"parameters": {
+				"Unit ID": {
+					"type":"Integer",
+					"min":0,
+					"max":255,
+					"default":0,
+					"description": "Address of the device"
+				},
+				"Coil address": {
+					"type":"Integer",
+					"min":0,
+					"max":65535,
+					"default":0,
+					"description": "Address of the first coil to read (0 based)"
+				},
+				"Value": {
+					"type":"Boolean",
+					"description": "Value to write to the coil"
+				}
+			}
+		},
+		"Write holding register": {
+			"menu":"",
+			"callback":"writeRegister",
+			"parameters": {
+				"Unit ID": {
+					"type":"Integer",
+					"min":0,
+					"max":255,
+					"default":0,
+					"description": "Address of the device"
+				},
+				"Register address": {
+					"type":"Integer",
+					"min":0,
+					"max":65535,
+					"default":0,
+					"description": "Address of the first holding register to read (0 based)"
+				},
+				"Value": {
+					"type":"Integer",
+					"min":0,
+					"max":65535,
+					"default":0,
+					"description": "Value to write to the register"
+				}
+			}
+		}
+	},
+	"scripts":
+	[
+		"Modbus-TCP.js"
+	]
+}
+
