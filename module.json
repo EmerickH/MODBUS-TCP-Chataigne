@@ -10,7 +10,7 @@
 	
 	"hasInput":true,
 	"hasOutput":true,
-	"hideDefaultCommands":false,
+	"hideDefaultCommands":true,
 	"hideDefaultParameters": ["messageStructure","protocol","firstValueIsTheName","autoAdd"],
 
 	"defaults":
