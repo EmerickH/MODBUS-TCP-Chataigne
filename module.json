@@ -3,7 +3,7 @@
 	"type":"TCP Client",
 	"path":"Protocol",
 	
-	"version":"1.0.0",
+	"version":"1.1.0",
 	"description":"Send commands to TCP Modbus devices",
 	"url": "https://github.com/EmerickH/MODBUS-TCP-Chataigne",
 	"downloadURL": "https://github.com/EmerickH/MODBUS-TCP-Chataigne/archive/refs/heads/main.zip",
@@ -33,6 +33,23 @@
 	},
 	"values":
 	{
+		"Latest error":{
+			"type": "Container",
+			"Latest invalid command":{
+				"type": "Integer",
+				"hexMode": true
+			},
+			"Latest error code":{
+				"type": "Integer",
+				"hexMode": true
+			},
+			"Latest error message":{
+				"type": "String"
+			},
+			"Error":{
+				"type": "Trigger"
+			}
+		}
 	},
 	"commands": {
 		"Read data": {
@@ -118,6 +135,74 @@
 					"max":65535,
 					"default":0,
 					"description": "Value to write to the register"
+				}
+			}
+		},
+		"Read file records": {
+			"menu":"",
+			"callback":"readFileRecord",
+			"parameters": {
+				"Unit ID": {
+					"type":"Integer",
+					"min":0,
+					"max":255,
+					"default":0,
+					"description": "Address of the device"
+				},
+				"File number": {
+					"type":"Integer",
+					"min":0,
+					"max":65535,
+					"default":0,
+					"description": "Address of the file to read (1 based)"
+				},
+				"Start record": {
+					"type":"Integer",
+					"min":0,
+					"max":9999,
+					"default":0,
+					"description": "Record to start to read from in the file (0 based)"
+				},
+				"Record count": {
+					"type":"Integer",
+					"min":0,
+					"max":65535,
+					"default":0,
+					"description": "Number of records to read"
+				}
+			}
+		},
+		"Write file record": {
+			"menu":"",
+			"callback":"writeFileRecord",
+			"parameters": {
+				"Unit ID": {
+					"type":"Integer",
+					"min":0,
+					"max":255,
+					"default":0,
+					"description": "Address of the device"
+				},
+				"File number": {
+					"type":"Integer",
+					"min":0,
+					"max":65535,
+					"default":0,
+					"description": "Address of the file to write to (1 based)"
+				},
+				"Record": {
+					"type":"Integer",
+					"min":0,
+					"max":9999,
+					"default":0,
+					"description": "Record to write to (0 based)"
+				},
+				"Value": {
+					"type":"Integer",
+					"min":0,
+					"max":65535,
+					"default":0,
+					"description": "Value to write to the record"
 				}
 			}
 		}

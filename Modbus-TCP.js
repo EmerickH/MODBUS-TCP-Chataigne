@@ -4,6 +4,22 @@ var lastTransactionId = -1;
 var lastDataStartAdress = 0;
 var lastDataCount = 0;
 
+var lastRequestedFile = 0;
+var lastRequestedRecord = 0;
+var lastRequestedFileLenght = 0;
+
+var errorMessages = [
+    "ILLEGAL FUNCTION",
+    "ILLEGAL DATA ADDRESS",
+    "ILLEGAL DATA VALUE",
+    "SERVER DEVICE FAILURE",
+    "ACKNOWLEDGE",
+    "SERVER DEVICE BUSY",
+    "MEMORY PARITY ERROR",
+    "GATEWAY PATH UNAVAILABLE",
+    "GATEWAY TARGET DEVICE FAILED TO RESPOND"
+];
+
 function moduleParameterChanged(param){
     if(param.is(local.parameters.clearValues)){
         for(var i=0; i<255; i+=1){
@@ -90,6 +106,27 @@ function readRegisterInput(data, categoryId, categoryName, name, nameId){
     }
 }
 
+function readFileInput(data){
+    if(data[10] != 0x06){
+        script.log("Incorrect header for file");
+        return;
+    }
+    if(!checkTransactionId(data)) return;
+
+    var device = getDeviceContainer(data[6]);
+    var category = getDeviceCategory(device,"Files","files");
+    var subcat = getDeviceCategory(category,"File "+lastRequestedFile,"file"+lastRequestedFile);
+
+    for(var i=0; i<lastRequestedFileLenght; i+=1){
+        var recordId = lastRequestedRecord+i;
+        var valueP = subcat.getChild("rec"+recordId);
+        if(valueP == null){
+            valueP = subcat.addIntParameter("Rec "+recordId, "Record n#"+recordId, 0, 0, 65535);
+        }
+        valueP.set(data[11+i]);
+    }
+}
+
 function dataReceived(data){
     script.log("Modbus message received:");
     if(data[2] != 0 || data[3] != 0){
@@ -98,14 +135,24 @@ function dataReceived(data){
     }
     //var length = (data[4] << 8) + data[5];
 
-    if(data[7] == 0x01){ // read coils
+    var cmd = data[7];
+
+    if(cmd == 0x01){ // read coils
         readBinaryInputs(data, "coils", "Coils", "Coil", "coil");
-    }else if(data[7] == 0x02){ // read inputs
+    }else if(cmd == 0x02){ // read inputs
         readBinaryInputs(data, "discreteInputs", "Discrete inputs", "Input", "input");
-    }else if(data[7] == 0x03){
+    }else if(cmd == 0x03){
         readRegisterInput(data, "holdingRegisters", "Holding registers", "Register", "register");
-    }else if(data[7] == 0x04){
+    }else if(cmd == 0x04){
         readRegisterInput(data, "inputRegisters", "Input registers", "Register", "register");
+    }else if(cmd == 0x14){ // Read File Record
+        readFileInput(data);
+    }else if(cmd > 0x80){
+        local.values.latestError.latestInvalidCommand.set(cmd - 0x80);
+        var errorCode = data[8];
+        local.values.latestError.latestErrorCode.set(errorCode);
+        local.values.latestError.latestErrorMessage.set(errorMessages[errorCode]);
+        local.values.latestError.error.trigger();
     }
 }
 
@@ -178,5 +225,48 @@ function writeRegister(address, registerAddress, value){
             value & 255
         ],
         4
+    );
+}
+
+function readFileRecord(address, file, record, recordCnt){
+    lastRequestedFile = file;
+    lastRequestedRecord = record;
+    lastRequestedFileLenght = recordCnt;
+
+    sendModbusMessage(
+        address,
+        0x14,
+        [
+            0x07,
+            0x06,
+            file >> 8,
+            file & 255,
+            record >> 8,
+            record & 255,
+            recordCnt >> 8,
+            recordCnt & 255
+        ],
+        8
+    );
+}
+
+function writeFileRecord(address, file, record, value){
+    script.log("Writting file");
+    sendModbusMessage(
+        address,
+        0x15,
+        [
+            0x09,
+            0x06,
+            file >> 8,
+            file & 255,
+            record >> 8,
+            record & 255,
+            0x00,
+            0x01,
+            value >> 8,
+            value & 255,
+        ],
+        10
     );
 }
