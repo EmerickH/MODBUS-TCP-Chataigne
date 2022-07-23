@@ -9,6 +9,7 @@ var lastRequestedRecord = 0;
 var lastRequestedFileLenght = 0;
 
 var errorMessages = [
+    "UNKNOWN",
     "ILLEGAL FUNCTION",
     "ILLEGAL DATA ADDRESS",
     "ILLEGAL DATA VALUE",
