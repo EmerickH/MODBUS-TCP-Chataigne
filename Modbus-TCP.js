@@ -252,7 +252,6 @@ function readFileRecord(address, file, record, recordCnt){
 }
 
 function writeFileRecord(address, file, record, value){
-    script.log("Writting file");
     sendModbusMessage(
         address,
         0x15,

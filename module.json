@@ -3,7 +3,7 @@
 	"type":"TCP Client",
 	"path":"Protocol",
 	
-	"version":"1.1.0",
+	"version":"1.1.1",
 	"description":"Send commands to TCP Modbus devices",
 	"url": "https://github.com/EmerickH/MODBUS-TCP-Chataigne",
 	"downloadURL": "https://github.com/EmerickH/MODBUS-TCP-Chataigne/archive/refs/heads/main.zip",
@@ -81,8 +81,9 @@
 				},
 				"Count": {
 					"type":"Integer",
-					"min":0,
+					"min":1,
 					"max":2000,
+					"default":1,
 					"description": "Number of registers/coils to read"
 				}
 			}
@@ -151,9 +152,9 @@
 				},
 				"File number": {
 					"type":"Integer",
-					"min":0,
+					"min":1,
 					"max":65535,
-					"default":0,
+					"default":1,
 					"description": "Address of the file to read (1 based)"
 				},
 				"Start record": {
@@ -185,9 +186,9 @@
 				},
 				"File number": {
 					"type":"Integer",
-					"min":0,
+					"min":1,
 					"max":65535,
-					"default":0,
+					"default":1,
 					"description": "Address of the file to write to (1 based)"
 				},
 				"Record": {
