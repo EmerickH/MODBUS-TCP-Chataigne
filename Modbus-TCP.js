@@ -33,6 +33,9 @@ function getDeviceContainer(deviceId){
     var device = local.values.getChild("device" + deviceId);
     if(device == null){
         device = local.values.addContainer("Device " + deviceId);
+        device.loadJSONData({
+            "removable" : true
+        });
     }
     return device;
 }
@@ -41,6 +44,9 @@ function getDeviceCategory(device, categoryName, categoryId){
     var category = device.getChild(categoryId);
     if(category == null){
         category = device.addContainer(categoryName);
+        category.loadJSONData({
+            "removable" : true
+        });
     }
     return category;
 }
@@ -73,6 +79,10 @@ function readBinaryInputs(data, categoryId, categoryName, name, nameId){
         var valueP = category.getChild(nameId+inputId);
         if(valueP == null){
             valueP = category.addBoolParameter(name+" "+inputId, name+" state n#"+inputId, false);
+            valueP.loadJSONData({
+                "removable" : true,
+                "type": "Boolean" //Fix for values not saved
+            });
         }
         var bitId = (i%8);
         var byteId = (i - bitId) / 8 + 9;
@@ -100,6 +110,10 @@ function readRegisterInput(data, categoryId, categoryName, name, nameId){
         var valueP = category.getChild(nameId+inputId);
         if(valueP == null){
             valueP = category.addIntParameter(name+" "+inputId, name+" n#"+inputId, 0, 0, 65535);
+            valueP.loadJSONData({
+                "removable" : true,
+                "type": "Integer" //Fix for values not saved
+            });
         }
         
         var byteId = (i*2)+9;

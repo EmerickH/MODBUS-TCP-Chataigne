@@ -3,10 +3,10 @@
 	"type":"TCP Client",
 	"path":"Protocol",
 	
-	"version":"1.1.1",
+	"version":"1.2.0",
 	"description":"Send commands to TCP Modbus devices",
 	"url": "https://github.com/EmerickH/MODBUS-TCP-Chataigne",
-	"downloadURL": "https://github.com/EmerickH/MODBUS-TCP-Chataigne/archive/refs/heads/main.zip",
+	"downloadURL": "https://github.com/EmerickH/MODBUS-TCP-Chataigne/archive/refs/heads/master.zip",
 	
 	"hasInput":true,
 	"hasOutput":true,
