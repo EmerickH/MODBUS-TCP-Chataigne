@@ -88,6 +88,7 @@ function readBinaryInputs(data, categoryId, categoryName, name, nameId){
         var byteId = (i - bitId) / 8 + 9;
 
         valueP.set((data[byteId] >> bitId) & 0x01 == 1);
+        valueP.setAttribute("saveValueOnly", false);
     }
 }
 
@@ -118,6 +119,7 @@ function readRegisterInput(data, categoryId, categoryName, name, nameId){
         
         var byteId = (i*2)+9;
         valueP.set((data[byteId] << 8) + data[byteId+1]);
+        valueP.setAttribute("saveValueOnly", false);
     }
 }
 
